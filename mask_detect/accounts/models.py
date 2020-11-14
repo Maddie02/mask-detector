@@ -9,6 +9,10 @@ class Company(models.Model):
 
 
 class Employee(AbstractUser):
+    email = models.EmailField(unique=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
     profile_pic = models.ImageField(upload_to='profilepics/', blank=True, null=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'company']
 

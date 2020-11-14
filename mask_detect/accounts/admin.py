@@ -1,3 +1,18 @@
 from django.contrib import admin
+from .models import Company, Employee
+from .forms import SignUpEmployeeForm
+from django.contrib.auth.admin import UserAdmin
 
-# Register your models here.
+class EmployeeUserAdmin(UserAdmin):
+    model = Employee
+    add_form = SignUpEmployeeForm
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('first_name', 'last_name', 'email', 'password1', 'password2', 'company')
+        }),
+    )
+
+admin.site.register(Company)
+admin.site.register(Employee, EmployeeUserAdmin)

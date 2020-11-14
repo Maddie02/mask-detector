@@ -9,6 +9,6 @@ class Company(models.Model):
 
 
 class Employee(AbstractUser):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
     profile_pic = models.ImageField(upload_to='profilepics/', blank=True, null=True)
 

@@ -13,6 +13,7 @@ class EmployeeUserAdmin(UserAdmin):
             'fields': ('first_name', 'last_name', 'email', 'password1', 'password2', 'company')
         }),
     )
+    list_display = ('email', 'first_name', 'last_name', 'company', 'is_staff', )
 
 admin.site.register(Company)
 admin.site.register(Employee, EmployeeUserAdmin)

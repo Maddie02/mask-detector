@@ -3,7 +3,10 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Employee
 
 class SignUpEmployeeForm(UserCreationForm):
+
+    email = forms.EmailField()
+
     class Meta:
         model = Employee
-        fields = ('first_name', 'last_name', 'email', 'password1', 'password2', 'company',)
+        fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'company',)
 

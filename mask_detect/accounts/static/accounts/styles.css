@@ -1,0 +1,10 @@
+.profile-page {
+    margin-top: 35px;
+}
+
+#profile-pic {
+    width: 50%;
+    height: auto;
+    border-radius: 100px;
+    padding-bottom: 10px;
+}

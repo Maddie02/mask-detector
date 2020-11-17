@@ -10,7 +10,7 @@ class EmployeeUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('first_name', 'last_name', 'email', 'password1', 'password2', 'company')
+            'fields': ('first_name', 'last_name', 'email', 'password1', 'password2', 'company', 'profile_pic')
         }),
     )
     list_display = ('email', 'first_name', 'last_name', 'company', 'is_staff', )

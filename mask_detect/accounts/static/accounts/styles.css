@@ -1,0 +1,16 @@
+nav {
+    margin-bottom: 35px;
+}
+
+#profile-pic {
+    width: 50%;
+    height: auto;
+    border-radius: 100px;
+    padding-bottom: 10px;
+}
+
+
+.logout-window {
+    padding: 60px;
+    background-color: rgb(211, 211, 211, 0.6); 
+}

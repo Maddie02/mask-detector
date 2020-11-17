@@ -4,7 +4,9 @@ from .models import Employee
 
 class SignUpEmployeeForm(UserCreationForm):
 
-    email = forms.EmailField()
+    email = forms.EmailField(widget=forms.TextInput(attrs={'autocomplete':'off'}))
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'autocomplete':'off'}))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'autocomplete':'off'}))
 
     class Meta:
         model = Employee

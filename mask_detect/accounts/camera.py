@@ -18,6 +18,7 @@ def load_face_detector():
     face_net = cv2.dnn.readNet(prototxt_file_path, weights_path)
     return face_net
 
+
 def load_face_mask_detector():
 
     print("Loading face mask detector model...")
@@ -31,6 +32,24 @@ def load_face_mask_detector():
     return model
 
 
+def camera_processing(face_detector, face_mask_detector):
+    stream = cv2.VideoCapture(0)
+
+    while True:
+        ret, frame = stream.read()
+
+        # Process data and make predictions
+
+        key = cv2.waitKey(1)
+
+        if key == ord('q'):
+            break
+    
+    cv2.destroyAllWindows()
+    stream.release()
 
 
+face_detector = load_face_detector()
+face_mask_detector = load_face_mask_detector()
 
+camera_processing(face_detector, face_mask_detector)

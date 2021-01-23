@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
 
-    'accounts.apps.AccountsConfig'
+    'accounts.apps.AccountsConfig',
+    'camera.apps.CameraConfig',
 ]
 
 AUTH_USER_MODEL = 'accounts.Employee'

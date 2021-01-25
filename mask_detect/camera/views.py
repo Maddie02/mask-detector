@@ -3,17 +3,19 @@ from camera.camera import Camera
 from threading import Thread
 import cv2
 
+
 class CameraThread(Thread):
 
-    def __init__(self):
+    def __init__(self, user):
         Thread.__init__(self)
+        self.user = user
 
     def run(self):
         camera = Camera()
-        run_camera(camera)
+        run_camera(self.user, camera)
 
 
-def run_camera(camera):
+def run_camera(user, camera):
     while camera.video.isOpened():
         success, frame = camera.get_frame()
 
@@ -28,6 +30,10 @@ def run_camera(camera):
 
             label = "Mask" if mask > without_mask else "No Mask"
             color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
+            
+            # Send email to user and do other stuff if he's not wearing a mask
+            if label == "No Mask":
+                pass
 
             label = f'{label}: {(max(mask, without_mask) * 100):.2f}%'
 

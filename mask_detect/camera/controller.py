@@ -1,8 +1,9 @@
-from django.shortcuts import render
+import cv2
 from camera.camera import Camera
 from threading import Thread
-import cv2
-
+from django.core.mail import send_mail
+from mask_detect.settings import EMAIL_HOST_USER
+import time
 
 class CameraThread(Thread):
 
@@ -47,3 +48,13 @@ def run_camera(user, camera):
             break
 
     camera.release()
+
+
+def send_alert_mail(email):
+    send_mail(
+        "Mask Detector Alert",
+        "The Mask Detector caught you not wearing a mask. Please wear your mask and be safe!",
+            "Mask Detector",
+            [email],
+            fail_silently=False
+    )

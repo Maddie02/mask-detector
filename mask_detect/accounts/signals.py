@@ -1,9 +1,7 @@
 from django.contrib.auth.signals import user_logged_in
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from camera.views import run_camera
-from camera.camera import Camera
-from camera.views import CameraThread
+from camera.controller import CameraThread
 from .models import Company
 from .models import Employee
 

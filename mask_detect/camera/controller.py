@@ -3,10 +3,11 @@ from camera.camera import Camera
 from threading import Thread
 from django.core.mail import send_mail
 from mask_detect.settings import EMAIL_HOST_USER
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import time
 
-WAIT_MINUTES = 5.0
+WAIT_MINUTES = 1.0
+utc = timezone(offset=timedelta(hours=2))
 
 class CameraThread(Thread):
 
@@ -42,14 +43,14 @@ def run_camera(user, camera):
                 employee_name = user.first_name + ' ' + user.last_name
 
                 if last_seen == 0:
-                    last_seen = datetime.now()
+                    last_seen = datetime.now(utc)
                     send_alert_mail(employee_name, user.email, last_seen)
                     continue
                 
-                time_interval = datetime.now() - last_seen
+                time_interval = datetime.now(utc) - last_seen
 
                 if time_interval.total_seconds() / 60 >= WAIT_MINUTES:
-                    last_seen = datetime.now()
+                    last_seen = datetime.now(utc)
                     send_alert_mail(employee_name, user.email, last_seen)
             else:
                 last_seen = 0

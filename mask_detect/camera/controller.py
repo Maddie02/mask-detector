@@ -72,7 +72,7 @@ def run_camera(user, camera):
     camera.release()
 
 
-def send_alert_mail(name, email, last_seen, repeat=None, total_mins=None):
+def send_alert_mail(name, email, last_seen, repeat=None):
 
     additional_message = ''
 

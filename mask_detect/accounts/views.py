@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import SignUpEmployeeForm
 
 def home(request):
-    return render(request, 'accounts/home.html')
+    return render(request, 'accounts/home.html', {'home': 1})
 
 
 def register(request):

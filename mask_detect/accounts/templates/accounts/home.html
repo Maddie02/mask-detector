@@ -8,12 +8,18 @@
             <div class="toggle"></div>
         </header>
 
-        {% comment %} <video src="{% static 'accounts/office.mp4' %}" muted loop autoplay></video> {% endcomment %}
+        <video src="{% static 'accounts/office-work.mp4' %}" muted loop autoplay></video>
 
         <div class="text">
             <h2>Work safely</h2>
             <p>The Mask Detector will help you and your company overcome the crisis and work safely together again.</p>
-            <a href="{% url 'register' %}">Get Started</a>
+            
+            {% if user.is_authenticated == False %}
+                <a href="{% url 'register' %}">Get Started</a>
+            {% else %}
+                <a href="{% url 'profile' %}">My Profile</a>
+            {% endif %}
+
         </div>
 
     </section>

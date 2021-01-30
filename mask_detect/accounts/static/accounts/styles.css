@@ -7,6 +7,16 @@
     font-family: 'Poppins', sans-serif;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
 .showcase {
     position: absolute;
     right: 0;
@@ -166,9 +176,14 @@ nav {
     color: #fff;
     background-image: url('/accounts/static/accounts/pexels-jakub-novacek-924824.jpg');
     background-size: cover;
-    padding: 25px 100px;
+    padding: 30px 100px;
     border-radius: 15px;
     margin-bottom: 20px;
+}
+
+footer {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 @media(max-width: 990px)

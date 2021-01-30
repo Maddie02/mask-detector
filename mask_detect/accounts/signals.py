@@ -18,6 +18,6 @@ def add_employee_to_company(sender, instance, **kwargs):
 @receiver(user_logged_in)
 def post_login(sender, user, request, **kwargs):
     camera_thread = CameraThread(user)
-    camera_thread.daemon = True
+    camera_thread.setDaemon(True)
     camera_thread.start()
 

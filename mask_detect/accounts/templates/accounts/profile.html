@@ -1,5 +1,6 @@
 {% extends "accounts/base.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 <title>{% block title %}Profile{% endblock %}</title>
 
@@ -11,11 +12,12 @@
         </div>
         <div class="card-body">
             {% if user.profile_pic %}
-                <img src="{{ user.profile_pic.url }}" id="profile-pic" class="card-img-top" alt="Profile Picture">
+                <img src="{{ user.profile_pic.url }}" class="card-img-top profile_pic" alt="Profile Picture">
+            {% else %}
+                <img src="{% static 'accounts/account.jpg' %}" class="card-img-top profile_pic" alt="Profile Picture">
             {% endif %}
             <h5 class="card-title">{{ user.first_name }}&nbsp;{{ user.last_name }}</h5>
             <p class="card-text">Works for {{ user.company }}</p>
-            <a href="#" class="btn btn-primary">Button</a>
         </div>
     </div>
 </div>

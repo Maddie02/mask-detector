@@ -139,11 +139,11 @@
 }
 
 nav {
-    margin-bottom: 35px;
+    margin-bottom: 20px;
 }
 
-#profile-pic {
-    width: 50%;
+.profile_pic {
+    width: 40%;
     height: auto;
     border-radius: 100px;
     padding-bottom: 10px;

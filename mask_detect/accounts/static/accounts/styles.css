@@ -154,6 +154,23 @@ nav {
     margin: 0px 40px;
 }
 
+.login {
+    color: #fff;
+    background-image: url('/accounts/static/accounts/pexels-jakub-novacek-924824.jpg');
+    background-size: cover;
+    padding: 100px;
+    border-radius: 15px;
+}
+
+.register {
+    color: #fff;
+    background-image: url('/accounts/static/accounts/pexels-jakub-novacek-924824.jpg');
+    background-size: cover;
+    padding: 25px 100px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
 @media(max-width: 990px)
 {
     .showcase,

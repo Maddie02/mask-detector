@@ -1,5 +1,33 @@
 {% extends 'accounts/base.html' %}
+{% load static %}
 
 {% block content %}
-    <h1>Home Page</h1>
+    <section class="showcase">
+        <header>
+            <h2 class="logo">Mask Detector</h2>
+            <div class="toggle"></div>
+        </header>
+
+        {% comment %} <video src="{% static 'accounts/office.mp4' %}" muted loop autoplay></video> {% endcomment %}
+
+        <div class="text">
+            <h2>Work safely</h2>
+            <p>The Mask Detector will help you and your company overcome the crisis and work safely together again.</p>
+            <a href="{% url 'register' %}">Get Started</a>
+        </div>
+
+    </section>
+    
+    <div class="menu">
+        <ul>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'register' %}">Register</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
 {% endblock content %}

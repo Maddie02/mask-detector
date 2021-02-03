@@ -18,6 +18,7 @@
             {% endif %}
             <h5 class="card-title">{{ user.first_name }}&nbsp;{{ user.last_name }}</h5>
             <p class="card-text">Works for {{ user.company }}</p>
+            <a href={% url 'export-csv' %} class="btn btn-secondary">Export CSV</a>
         </div>
     </div>
 </div>

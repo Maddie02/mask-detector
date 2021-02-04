@@ -55,3 +55,21 @@ def dashboard(request):
 
     return render(request, 'accounts/dashboard.html', {'employees': employees, 'stats': stats})
 
+
+@staff_member_required
+def dashboard_export_csvs(request):
+    utc = datetime.timedelta(hours=2)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=Stats' + str(datetime.datetime.now() + utc) + '.csv'
+
+    writer = csv.writer(response)
+    writer.writerow(['First name', 'Last name', 'Violations', 'Last date without mask'])
+
+    stats = Statistic.objects.all()
+
+    for stat in stats:
+        writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.count_violations, stat.last_seen_date + utc])
+
+    return response
+

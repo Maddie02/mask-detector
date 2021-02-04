@@ -2,12 +2,14 @@ import cv2
 from camera.camera import Camera
 from threading import Thread
 from django.core.mail import send_mail
-from mask_detect.settings import EMAIL_HOST_USER
 from datetime import datetime, timezone, timedelta
 from django.contrib.auth.signals import user_logged_out
 from django.dispatch import receiver
+from accounts.models import Statistic
 
-WAIT_MINUTES = 5.0
+WAIT_MINUTES = 0.5
+VIOLATION_NUMBER = 3
+
 utc = timezone(offset=timedelta(hours=2))
 
 class CameraThread(Thread):
@@ -41,20 +43,20 @@ def run_camera(user, camera):
             color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
             
             if label == "No Mask":
-                employee_name = user.first_name + ' ' + user.last_name
 
                 if last_seen_without_mask == 0:
                     last_seen_without_mask = datetime.now(utc)
                     times_caught_without_mask += 1
-                    send_alert_mail(employee_name, user.email, last_seen_without_mask, repeat=times_caught_without_mask)
+                    send_alert_mail(user, last_seen_without_mask, repeat=times_caught_without_mask)
                     continue
                 
                 time_interval = datetime.now(utc) - last_seen_without_mask
+                print(time_interval)
 
                 if time_interval.total_seconds() / 60 >= WAIT_MINUTES:
                     last_seen_without_mask = datetime.now(utc)
                     times_caught_without_mask += 1
-                    send_alert_mail(employee_name, user.email, last_seen_without_mask, repeat=times_caught_without_mask)
+                    send_alert_mail(user, last_seen_without_mask, repeat=times_caught_without_mask)
             else:
                 last_seen_without_mask = 0
             
@@ -72,15 +74,16 @@ def run_camera(user, camera):
     camera.release()
 
 
-def send_alert_mail(name, email, last_seen, repeat=None):
+def send_alert_mail(user, last_seen, repeat=None):
 
     additional_message = ''
 
-    if repeat and repeat % 5 == 0:
+    if repeat and repeat % VIOLATION_NUMBER == 0:
+        create_stats(user, last_seen, repeat)
         additional_message = f'<span style="font-size:20px;">You were caught without a mask for the {repeat}th time today!</span> <br>'
 
     message = f'''
-        Hello, {name},
+        Hello, {user.first_name} {user.last_name},
         \n\n
         The Mask Detector caught you not wearing a mask at {last_seen.strftime("%H:%M:%S, %d/%m/%Y")}. 
         \n\n
@@ -91,7 +94,7 @@ def send_alert_mail(name, email, last_seen, repeat=None):
     '''
 
     html_message = f'''
-        Hello, {name},
+        Hello, {user.first_name} {user.last_name},
         <br> <br>
         The Mask Detector caught you not wearing a mask at {last_seen.strftime("%H:%M:%S, %d/%m/%Y")}. 
         <br>
@@ -107,8 +110,28 @@ def send_alert_mail(name, email, last_seen, repeat=None):
         "Mask Detector Alert",
         message,
         "Mask Detector",
-        [email],
+        [user.email],
         fail_silently=False,
         html_message=html_message
     )
+
+
+def create_stats(user, last_seen, repeat):
+
+    violations = repeat / VIOLATION_NUMBER
+    print(violations)
+
+    try:
+        stat = Statistic.objects.get(employee=user)
+    except:
+        print("There is no statictic related to that user")
+        stat = None
+    
+    if stat:
+        stat.last_seen_date = last_seen
+        stat.count_violations = violations
+        stat.save()
+    else:
+        stat = Statistic(employee=user, count_violations=violations, last_seen_date=last_seen)
+        stat.save()
 

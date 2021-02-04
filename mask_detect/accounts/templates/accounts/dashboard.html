@@ -1,0 +1,27 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+
+<title>{% block title %}Dashboard{% endblock %}</title>
+
+{% block content %}
+    <div class="container">
+        {% for employee in employees %}
+            <div class="row">
+                <div class="col">
+                    <h4>{{ employee.first_name }}&nbsp{{ employee.last_name }}</h4>
+                    <p>{{ employee.company }}</p>
+                </div>
+                <div class="col">
+                    {% for stat in stats %}
+                        {% if stat.employee_id == employee.id %}
+                            <p><strong>Violations:</strong> {{ stat.count_violations }}</p>
+                            <p><strong>Last seen without mask:</strong> {{ stat.last_seen_date }}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock content %}
+

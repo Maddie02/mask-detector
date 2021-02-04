@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .forms import SignUpEmployeeForm
-from .models import Employee
+from .models import Employee, Statistic
 import datetime
 import csv
 
@@ -31,4 +31,17 @@ def profile(request):
 
 def export_csv_stats(request):
 
-    pass
+    utc = datetime.timedelta(hours=2)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=Stats' + str(datetime.datetime.now() + utc) + '.csv'
+
+    writer = csv.writer(response)
+    writer.writerow(['First name', 'Last name', 'Violations', 'Last date without mask'])
+
+    stat = Statistic.objects.filter(employee=request.user).first()
+
+    writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.count_violations, stat.last_seen_date + utc])
+
+    return response
+

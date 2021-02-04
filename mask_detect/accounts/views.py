@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
 from .forms import SignUpEmployeeForm
 from .models import Employee, Statistic
@@ -29,6 +30,7 @@ def profile(request):
     return render(request, 'accounts/profile.html')
 
 
+@login_required
 def export_csv_stats(request):
 
     utc = datetime.timedelta(hours=2)
@@ -44,4 +46,12 @@ def export_csv_stats(request):
     writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.count_violations, stat.last_seen_date + utc])
 
     return response
+
+
+@staff_member_required
+def dashboard(request):
+    employees = Employee.objects.all()
+    stats = Statistic.objects.all()
+
+    return render(request, 'accounts/dashboard.html', {'employees': employees, 'stats': stats})
 

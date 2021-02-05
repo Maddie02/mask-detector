@@ -118,9 +118,6 @@ def send_alert_mail(user, last_seen, repeat=None):
 
 def create_stats(user, last_seen, repeat):
 
-    violations = repeat / VIOLATION_NUMBER
-    print(violations)
-
     try:
         stat = Statistic.objects.get(employee=user)
     except:
@@ -129,9 +126,9 @@ def create_stats(user, last_seen, repeat):
     
     if stat:
         stat.last_seen_date = last_seen
-        stat.count_violations = violations
+        stat.count_violations = stat.count_violations + 1
         stat.save()
     else:
-        stat = Statistic(employee=user, count_violations=violations, last_seen_date=last_seen)
+        stat = Statistic(employee=user, count_violations=1, last_seen_date=last_seen)
         stat.save()
 

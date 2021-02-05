@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from datetime import datetime, timezone, timedelta
 from django.contrib.auth.signals import user_logged_out
 from django.dispatch import receiver
-from accounts.models import Statistic
+from stats.models import Statistic
 
 WAIT_MINUTES = 0.5
 VIOLATION_NUMBER = 3

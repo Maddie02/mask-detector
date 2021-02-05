@@ -23,10 +23,3 @@ class Employee(AbstractUser):
         return f'{self.first_name} {self.last_name}'
 
 
-class Statistic(models.Model):
-    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, null=True)
-    count_violations = models.IntegerField(null=True)
-    last_seen_date = models.DateTimeField(null=True, default=timezone.now)
-    
-    def __str__(self):
-        return f'{self.employee.first_name} {self.employee.last_name}'

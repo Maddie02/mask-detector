@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Company, Employee, Statistic
+from .models import Company, Employee
 from .forms import SignUpEmployeeForm
 from django.contrib.auth.admin import UserAdmin
 
@@ -17,4 +17,3 @@ class EmployeeUserAdmin(UserAdmin):
 
 admin.site.register(Company)
 admin.site.register(Employee, EmployeeUserAdmin)
-admin.site.register(Statistic)

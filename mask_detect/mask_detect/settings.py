@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     'accounts.apps.AccountsConfig',
     'camera.apps.CameraConfig',
+    'stats.apps.StatsConfig'
 ]
 
 AUTH_USER_MODEL = 'accounts.Employee'

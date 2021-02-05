@@ -43,6 +43,10 @@ def export_csv_stats(request):
 
     stat = Statistic.objects.filter(employee=request.user).first()
 
+    if stat == None:
+        messages.info(request, 'Statistics for your account are not found')
+        return redirect('profile')
+
     writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.count_violations, stat.last_seen_date + utc])
 
     return response

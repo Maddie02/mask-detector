@@ -51,7 +51,7 @@ def run_camera(user, camera):
                     continue
                 
                 time_interval = datetime.now(utc) - last_seen_without_mask
-                print(time_interval)
+                # print(time_interval)
 
                 if time_interval.total_seconds() / 60 >= WAIT_MINUTES:
                     last_seen_without_mask = datetime.now(utc)
@@ -80,7 +80,7 @@ def send_alert_mail(user, last_seen, repeat=None):
 
     if repeat and repeat % VIOLATION_NUMBER == 0:
         create_stats(user, last_seen, repeat)
-        additional_message = f'<span style="font-size:20px;">You were caught without a mask for the {repeat}th time today!</span> <br>'
+        additional_message = f'<span style="font-size:20px;">You were caught without a mask for the {repeat} time today!</span> <br>'
 
     message = f'''
         Hello, {user.first_name} {user.last_name},
@@ -121,7 +121,7 @@ def create_stats(user, last_seen, repeat):
     try:
         stat = Statistic.objects.get(employee=user)
     except:
-        print("There is no statictic related to that user")
+        print("We're creating a statistic for that user")
         stat = None
     
     if stat:

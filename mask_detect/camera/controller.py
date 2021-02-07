@@ -121,14 +121,10 @@ def create_stats(user, last_seen, repeat):
     try:
         stat = Statistic.objects.get(employee=user)
     except:
-        print("We're creating a statistic for that user")
-        stat = None
-    
-    if stat:
-        stat.last_seen_date = last_seen
-        stat.count_violations = stat.count_violations + 1
-        stat.save()
-    else:
-        stat = Statistic(employee=user, count_violations=1, last_seen_date=last_seen)
-        stat.save()
+        print("We're creating a statistic for that")
+        stat = Statistic(employee=user)
+
+    stat.last_seen_date = last_seen
+    stat.count_violations = stat.count_violations + 1
+    stat.save()
 

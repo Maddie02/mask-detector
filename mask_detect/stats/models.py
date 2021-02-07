@@ -3,7 +3,7 @@ from accounts.models import Employee
 
 class Statistic(models.Model):
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE, null=True)
-    count_violations = models.IntegerField(null=True)
+    count_violations = models.IntegerField(default=0, null=True)
     last_seen_date = models.DateTimeField(null=True)
     
     def __str__(self):

@@ -181,6 +181,15 @@ nav {
     margin-bottom: 20px;
 }
 
+.dash-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-stat {
+    width: 49%;
+}
+
 footer {
     color: #fff;
     background-color: rgba(0, 0, 0, 0.7);

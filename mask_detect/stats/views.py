@@ -56,3 +56,10 @@ def dashboard_export_csvs(request):
 
     return response
 
+
+@staff_member_required
+def delete_dashboard_stats(request):
+    Statistic.objects.all().delete()
+
+    return redirect('dashboard')
+

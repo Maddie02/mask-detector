@@ -1,4 +1,5 @@
 {% extends "accounts/base.html" %}
+{% load tz %}
 {% load static %}
 
 <title>{% block title %}Dashboard{% endblock %}</title>
@@ -14,8 +15,10 @@
                 <div class="col">
                     {% for stat in stats %}
                         {% if stat.employee_id == employee.id %}
+                        {% timezone 'Europe/Sofia' %}
                             <p><strong>Violations:</strong> {{ stat.count_violations }}</p>
                             <p><strong>Last seen without mask:</strong> {{ stat.last_seen_date }}</p>
+                        {% endtimezone %}
                         {% endif %}
                     {% endfor %}
                 </div>

@@ -36,7 +36,9 @@ def dashboard(request):
     employees = Employee.objects.all()
     stats = Statistic.objects.all()
 
-    return render(request, 'accounts/dashboard.html', {'employees': employees, 'stats': stats})
+    disable = 'disabled' if len(stats) == 0 else None
+
+    return render(request, 'accounts/dashboard.html', {'employees': employees, 'stats': stats, 'disable': disable})
 
 
 @staff_member_required

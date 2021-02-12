@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.dispatch import receiver
-from django.db.models.signals import pre_save
+from django.utils import timezone
 
 class Company(models.Model):
     name = models.CharField(max_length=50)
@@ -21,6 +21,5 @@ class Employee(AbstractUser):
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
-
 
 

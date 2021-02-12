@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from .forms import SignUpEmployeeForm
+from .models import Employee
+import datetime
+import csv
 
 def home(request):
     return render(request, 'accounts/home.html', {'home': 1})
@@ -23,4 +27,5 @@ def register(request):
 @login_required
 def profile(request):
     return render(request, 'accounts/profile.html')
+
 

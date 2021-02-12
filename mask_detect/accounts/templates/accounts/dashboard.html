@@ -1,0 +1,33 @@
+{% extends "accounts/base.html" %}
+{% load tz %}
+
+<title>{% block title %}Dashboard{% endblock %}</title>
+
+{% block content %}
+    <div class="container">
+        {% for employee in employees %}
+            <div class="row">
+                <div class="col">
+                    <h4>{{ employee.first_name }}&nbsp{{ employee.last_name }}</h4>
+                    <p>{{ employee.company }}</p>
+                </div>
+                <div class="col">
+                    {% for stat in stats %}
+                        {% if stat.employee_id == employee.id %}
+                        {% timezone 'Europe/Sofia' %}
+                            <p><strong>Violations:</strong> {{ stat.count_violations }}</p>
+                            <p><strong>Last seen without mask:</strong> {{ stat.last_seen_date }}</p>
+                        {% endtimezone %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <hr>
+        {% endfor %}
+        <div class="dash-buttons">
+            <a href={% url 'export-all-stats' %} class="btn btn-secondary btn-lg btn-stat">Export Statistics</a>
+            <a href={% url 'delete-stats' %} class="btn btn-danger btn-lg btn-stat {{ disable }}">Delete Statistics</a>
+        </div>
+    </div>
+{% endblock content %}
+

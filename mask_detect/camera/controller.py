@@ -6,6 +6,7 @@ from datetime import datetime, timezone, timedelta
 from django.contrib.auth.signals import user_logged_out
 from django.dispatch import receiver
 from stats.models import Statistic
+from django.shortcuts import redirect
 
 WAIT_MINUTES = 0.5
 VIOLATION_NUMBER = 3
@@ -17,10 +18,10 @@ class CameraThread(Thread):
     def __init__(self, user):
         Thread.__init__(self)
         self.user = user
+        self.camera = Camera()
 
     def run(self):
-        camera = Camera()
-        run_camera(self.user, camera)
+        run_camera(self.user, self.camera)
 
 
 def run_camera(user, camera):

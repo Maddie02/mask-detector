@@ -9,5 +9,13 @@
         {% if chart %}
             {{ chart | safe }}
         {% endif %}
+
     </div>
+        <div class="charts-companies">
+            {% if charts_for_company %}
+                {% for chart_for_company in charts_for_company %}
+                    <span class="chart-com"> {{ chart_for_company | safe }} </span>
+                {% endfor %}
+            {% endif %}
+        </div>
 {% endblock content %}

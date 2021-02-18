@@ -5,8 +5,54 @@ from django.contrib import messages
 from .models import Statistic
 from accounts.models import Employee
 from django.http import HttpResponse
+import plotly.graph_objects as go
+import plotly.offline as opy
 import datetime
 import csv
+
+
+def get_employee_stats(stats):
+
+    stats_dict = {}
+
+    for stat in stats:
+        stats_dict[stat.employee.first_name + ' ' + stat.employee.last_name] = stat.count_violations
+    
+    print(stats_dict)
+    employees = list(stats_dict.keys())
+    violations = list(stats_dict.values())
+
+    data = [go.Bar(
+            x=employees, y=violations,
+            marker=dict(
+                line=dict(
+                    color='rgb(8,48,107)',
+                    width=1
+                ),
+            ),
+            textposition='auto',
+            opacity=0.8,
+            )]
+
+    layout = go.Layout(
+        title="Violations of all employees",
+        font=dict(
+            family='Poppins, monospace',
+            size=14,
+            color='#7f7f7f'))
+
+    figure = go.Figure(data=data, layout=layout)
+    figure.update_xaxes(
+        title='Employee'
+    )
+
+    figure.update_yaxes(
+        title='Violations'
+    )
+
+    chart = opy.plot(figure, output_type='div')
+
+    return chart
 
 
 @login_required
@@ -64,4 +110,12 @@ def delete_dashboard_stats(request):
     Statistic.objects.all().delete()
 
     return redirect('dashboard')
+
+
+@staff_member_required
+def view_charts(request):
+
+    stats = Statistic.objects.all()
+
+    return render(request, 'accounts/charts.html', {'chart': get_employee_stats(stats)})
 

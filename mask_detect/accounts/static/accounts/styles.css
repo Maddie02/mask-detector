@@ -190,6 +190,11 @@ nav {
     width: 49%;
 }
 
+.btn-view {
+    margin-top: 5px;
+    width: 100%;
+}
+
 footer {
     color: #fff;
     background-color: rgba(0, 0, 0, 0.7);

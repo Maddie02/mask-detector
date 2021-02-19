@@ -5,6 +5,7 @@ from django.contrib import messages
 from .models import Statistic
 from accounts.models import Employee, Company
 from django.http import HttpResponse
+from .utils.check_stats import delete_stats_if_a_month_have_passed
 import plotly.graph_objects as go
 import plotly.offline as opy
 import datetime
@@ -78,14 +79,19 @@ def export_csv_stats(request):
 
 @staff_member_required
 def dashboard(request):
-    employees = Employee.objects.all()
+    employees = Employee.objects.all() if request.user.is_superuser else Employee.objects.filter(company=request.user.company)
     stats = Statistic.objects.all()
+ 
+    for stat in stats:
+        delete_stats_if_a_month_have_passed(stat)
 
-    disable = 'disabled' if len(stats) == 0 else None
+    updated_stats = Statistic.objects.all() if request.user.is_superuser else Statistic.objects.filter(employee__company__name=request.user.company)
+
+    disable = 'disabled' if len(updated_stats) == 0 else None
 
     context = {
         'employees': employees,
-        'stats': stats,
+        'stats': updated_stats,
         'disable': disable
     }
 
@@ -112,7 +118,7 @@ def dashboard_export_csvs(request):
 
 @staff_member_required
 def delete_dashboard_stats(request):
-    Statistic.objects.all().delete()
+    Statistic.objects.filter(employee__company__name=request.user.company).delete()
 
     return redirect('dashboard')
 

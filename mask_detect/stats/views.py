@@ -93,7 +93,8 @@ def dashboard(request):
     context = {
         'employees': employees,
         'stats': updated_stats,
-        'disable': disable
+        'disable': disable,
+        'month': datetime.datetime.now().strftime("%B")
     }
 
     return render(request, 'accounts/dashboard.html', context)
@@ -110,6 +111,10 @@ def dashboard_export_csvs(request):
     writer.writerow(['First name', 'Last name', 'Violations', 'Last date without mask'])
 
     stats = Statistic.objects.all()
+
+    if not stats:
+        messages.info(request, 'There are no statistics available for this month')
+        return redirect('dashboard')
 
     for stat in stats:
         writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.count_violations, stat.last_seen_date + utc])
@@ -146,6 +151,8 @@ def view_charts(request):
         context = {
             'chart': get_employee_stats(stats_for_company, company=request.user.company)
         }
+    
+    context['month'] = datetime.datetime.now().strftime("%B")
 
     return render(request, 'accounts/charts.html', context)
 

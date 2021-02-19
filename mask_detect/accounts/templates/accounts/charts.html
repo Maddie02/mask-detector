@@ -5,7 +5,8 @@
 
 {% block content %}
     <div class="container">
-
+        <h2 style="text-align: center;">{{ month }} statistics</h2>
+        
         {% if chart %}
             {{ chart | safe }}
         {% endif %}

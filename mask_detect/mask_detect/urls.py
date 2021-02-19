@@ -32,7 +32,8 @@ urlpatterns = [
     path('stats', stat_views.export_csv_stats, name='export-csv'),
     path('dashboard/', stat_views.dashboard, name="dashboard"),
     path('admin-stats/', stat_views.dashboard_export_csvs, name='export-all-stats'),
-    path('delete-stats/', stat_views.delete_dashboard_stats, name="delete-stats")
+    path('delete-stats/', stat_views.delete_dashboard_stats, name="delete-stats"),
+    path('charts/', stat_views.view_charts, name='charts'),
 ] 
 
 

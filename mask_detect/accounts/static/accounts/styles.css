@@ -207,6 +207,11 @@ nav {
     width: 30%;
 }
 
+a.btn.disabled, fieldset:disabled a.btn {
+    pointer-events: visible;
+    cursor: not-allowed;
+}
+
 .dashboard {
     margin-top: 20px;
     display: flex;

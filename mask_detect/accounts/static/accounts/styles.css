@@ -184,6 +184,7 @@ nav {
 .dash-buttons {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 10px;
 }
 
 .btn-stat {
@@ -193,18 +194,31 @@ nav {
 .btn-view {
     margin-top: 5px;
     width: 100%;
-    margin-bottom: 20px;
 }
 
 .charts-companies {
     width: 100%;
-     display: flex;
+    display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
 }
 
 .chart-com {
     width: 30%;
+}
+
+.dashboard {
+    margin-top: 20px;
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.employee-card {
+    border-radius: 20px;
+    width: 28%;
+    margin-bottom: 10px;
 }
 
 footer {

@@ -80,7 +80,7 @@ def send_alert_mail(user, last_seen, repeat=None):
     additional_message = ''
 
     if repeat and repeat % VIOLATION_NUMBER == 0:
-        create_stats(user, last_seen, repeat)
+        create_stats(user, last_seen)
         additional_message = f'<span style="font-size:20px;">You were caught without a mask for the {repeat} time today!</span> <br>'
 
     message = f'''
@@ -117,15 +117,17 @@ def send_alert_mail(user, last_seen, repeat=None):
     )
 
 
-def create_stats(user, last_seen, repeat):
+def create_stats(user, last_seen):
 
     try:
-        stat = Statistic.objects.get(employee=user)
+        stat = Statistic.objects.filter(employee=user).first()
+        if stat == None:
+            stat = Statistic(employee=user, count_violations=1, last_seen_date=last_seen)
+        else:
+            stat.last_seen_date = last_seen
+            stat.count_violations = stat.count_violations + 1
+        stat.save()
     except:
-        print("We're creating a statistic for that")
-        stat = Statistic(employee=user)
+        print("Error while creating/updating statistics")
 
-    stat.last_seen_date = last_seen
-    stat.count_violations = stat.count_violations + 1
-    stat.save()
 

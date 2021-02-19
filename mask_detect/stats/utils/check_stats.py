@@ -8,14 +8,14 @@ def delete_stats_if_a_month_have_passed(stat):
     company = stat.employee.company.name
     company_stats = Statistic.objects.filter(employee__company__name=company)
 
-    first_stat_for_company = company_stats.order_by('last_seen_date').first()
+    last_stat_for_company = company_stats.order_by('last_seen_date').last()
 
-    if first_stat_for_company == None:
+    if last_stat_for_company == None:
         return
 
-    delta = pytz.utc.localize(datetime.now()) - first_stat_for_company.last_seen_date
+    today = pytz.utc.localize(datetime.now())
 
-    if delta.days >= 30:
+    if today.month != last_stat_for_company.last_seen_date.month:
         print(f"deleting statistic for {company}")
         company_stats.delete()
         company_stats = None

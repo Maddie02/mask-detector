@@ -85,9 +85,10 @@ def dashboard(request):
     for stat in stats:
         delete_stats_if_a_month_have_passed(stat)
 
-    updated_stats = Statistic.objects.all() if request.user.is_superuser else Statistic.objects.filter(employee__company__name=request.user.company)
+    company_stats = Statistic.objects.filter(employee__company__name=request.user.company)
+    updated_stats = Statistic.objects.all() if request.user.is_superuser else company_stats
 
-    disable = 'disabled' if len(updated_stats) == 0 else None
+    disable = 'disabled' if len(company_stats) == 0 else None
 
     context = {
         'employees': employees,
@@ -135,10 +136,16 @@ def view_charts(request):
         stats_per_company = Statistic.objects.filter(employee__company__name=company)
         charts_for_company.append(get_employee_stats(stats_per_company, company=company))
 
-    context = {
-        'chart': get_employee_stats(stats, company=None),
-        'charts_for_company': charts_for_company,
-    }
+    if request.user.is_superuser:
+        context = {
+            'chart': get_employee_stats(stats, company=None),
+            'charts_for_company': charts_for_company,
+        }
+    else:
+        stats_for_company = Statistic.objects.filter(employee__company__name=request.user.company)
+        context = {
+            'chart': get_employee_stats(stats_for_company, company=request.user.company)
+        }
 
     return render(request, 'accounts/charts.html', context)
 

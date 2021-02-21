@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .forms import SignUpEmployeeForm
 from .models import Employee
+from stats.models import Statistic
 import datetime
 import csv
 
@@ -26,6 +27,16 @@ def register(request):
 
 @login_required
 def profile(request):
-    return render(request, 'accounts/profile.html')
+
+    user_stats = Statistic.objects.filter(employee=request.user).first()
+    
+    if user_stats == None:
+        context = {}
+    else:
+        context = {
+            'last_seen_without_mask': user_stats.last_seen_date
+        }
+
+    return render(request, 'accounts/profile.html', context)
 
 

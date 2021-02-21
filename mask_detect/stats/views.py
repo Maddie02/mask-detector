@@ -82,9 +82,6 @@ def dashboard(request):
     employees = Employee.objects.all() if request.user.is_superuser else Employee.objects.filter(company=request.user.company)
     stats = Statistic.objects.all()
  
-    for stat in stats:
-        delete_stats_if_a_month_have_passed(stat)
-
     company_stats = Statistic.objects.filter(employee__company__name=request.user.company)
     updated_stats = Statistic.objects.all() if request.user.is_superuser else company_stats
 
@@ -109,8 +106,11 @@ def dashboard_export_csvs(request):
 
     writer = csv.writer(response)
     writer.writerow(['First name', 'Last name', 'Violations', 'Last date without mask'])
-
-    stats = Statistic.objects.all()
+    
+    if request.user.is_superuser:
+        stats = Statistic.objects.all()
+    else:
+        stats = Statistic.objects.filter(employee__company__name=request.user.company)
 
     if not stats:
         messages.info(request, 'There are no statistics available for this month')

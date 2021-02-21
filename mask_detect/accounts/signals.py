@@ -1,9 +1,10 @@
 from django.contrib.auth.signals import user_logged_in
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from camera.controller import CameraThread
 from .models import Company
 from .models import Employee
+from stats.models import Statistic
+from stats.utils.check_stats import delete_stats_if_a_month_have_passed
 
 
 @receiver(pre_save, sender=Employee)
@@ -14,6 +15,15 @@ def add_employee_to_company(sender, instance, **kwargs):
     if company:
         instance.company = company.first()
 
+
+@receiver(user_logged_in)
+def post_login(sender, user, request, **kwargs):
+    stat = Statistic.objects.filter(employee=user).first()
+
+    if stat == None:
+        return
+
+    delete_stats_if_a_month_have_passed(stat)
 
 
 

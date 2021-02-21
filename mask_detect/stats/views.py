@@ -82,9 +82,6 @@ def dashboard(request):
     employees = Employee.objects.all() if request.user.is_superuser else Employee.objects.filter(company=request.user.company)
     stats = Statistic.objects.all()
  
-    for stat in stats:
-        delete_stats_if_a_month_have_passed(stat)
-
     company_stats = Statistic.objects.filter(employee__company__name=request.user.company)
     updated_stats = Statistic.objects.all() if request.user.is_superuser else company_stats
 

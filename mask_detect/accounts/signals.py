@@ -18,7 +18,6 @@ def add_employee_to_company(sender, instance, **kwargs):
 
 @receiver(user_logged_in)
 def post_login(sender, user, request, **kwargs):
-    print("ENTER POST LOGIN")
     stat = Statistic.objects.filter(employee=user).first()
 
     if stat == None:

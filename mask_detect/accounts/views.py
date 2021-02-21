@@ -30,9 +30,12 @@ def profile(request):
 
     user_stats = Statistic.objects.filter(employee=request.user).first()
     
-    context = {
-        'last_seen_without_mask': user_stats.last_seen_date
-    }
+    if user_stats == None:
+        context = {}
+    else:
+        context = {
+            'last_seen_without_mask': user_stats.last_seen_date
+        }
 
     return render(request, 'accounts/profile.html', context)
 

@@ -32,7 +32,7 @@ class Camera:
     def load_face_mask_detector(self):
         print("Loading face mask detector model...")
         try:
-            path_to_face_mask_model = os.path.join(".", "../ai/", "face-mask-detector-net.h5")
+            path_to_face_mask_model = os.path.join(".", "../ai/", "face-mask-detector.h5")
             model = load_model(path_to_face_mask_model)
             print("Face Mask model succesfully loaded!")
         except Exception as e:

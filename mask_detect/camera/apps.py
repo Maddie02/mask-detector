@@ -6,4 +6,8 @@ class CameraConfig(AppConfig):
     name = 'camera'
 
     def ready(self):
-        import camera.signals
+        from camera.controller import CameraThread
+
+        camera_thread = CameraThread()
+        camera_thread.setDaemon(True)
+        camera_thread.start()

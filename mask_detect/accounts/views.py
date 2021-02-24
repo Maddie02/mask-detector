@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from .forms import SignUpEmployeeForm
+from .forms import SignUpEmployeeForm, UpdateEmployeeProfilePicture
 from .models import Employee
 from stats.models import Statistic
 import datetime
@@ -27,6 +27,17 @@ def register(request):
 
 @login_required
 def profile(request):
+    
+    if request.method == 'POST':
+        profile_form = UpdateEmployeeProfilePicture(request.POST, request.FILES, instance=request.user)
+    
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, f'You have updated your profile picture!')
+            return redirect('profile')
+    else:
+        profile_form = UpdateEmployeeProfilePicture(instance=request.user)
+
 
     user_stats = Statistic.objects.filter(employee=request.user).first()
     
@@ -34,7 +45,8 @@ def profile(request):
         context = {}
     else:
         context = {
-            'last_seen_without_mask': user_stats.last_seen_date
+            'last_seen_without_mask': user_stats.last_seen_date,
+            'p_form': profile_form
         }
 
     return render(request, 'accounts/profile.html', context)

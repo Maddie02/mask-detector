@@ -230,6 +230,14 @@ footer {
     color: #fff;
     background-color: rgba(0, 0, 0, 0.7);
 }
+/* 
+.profile-pic-field label.requiredField {
+    padding-left: 50%;
+} */
+
+input[type='file'] {
+    padding-left: 40%;
+}
 
 @media(max-width: 990px)
 {

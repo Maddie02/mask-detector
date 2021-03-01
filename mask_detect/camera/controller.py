@@ -105,6 +105,7 @@ def recognize_user(frame):
             else:
                 return employee.first()
 
+
 def send_alert_mail(user, last_seen, repeat=None):
 
     additional_message = ''

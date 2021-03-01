@@ -30,9 +30,10 @@ class CameraThread(Thread):
 
 def run_camera(camera):
     time.sleep(5)
+
     last_seen_without_mask = 0
     times_caught_without_mask = 0
-
+    
     while camera.video.isOpened():
         success, frame = camera.get_frame()
 
@@ -52,8 +53,16 @@ def run_camera(camera):
                 user = recognize_user(frame)
 
                 if user:
-                    # Do stuff
-                    pass
+                    if last_seen_without_mask == 0:
+                        last_seen_without_mask = time.time()
+                    
+                    if (time.time() - last_seen_without_mask) / 60 >= WAIT_MINUTES:    
+                        last_seen_without_mask = time.time()
+                        times_caught_without_mask += 1
+                        send_alert_mail(user, datetime.now(utc), times_caught_without_mask)
+
+            else:
+                last_seen_without_mask = 0
 
             label = f'{label}: {(max(mask, without_mask) * 100):.2f}%'
 

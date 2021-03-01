@@ -42,7 +42,9 @@ def profile(request):
     user_stats = Statistic.objects.filter(employee=request.user).first()
     
     if user_stats == None:
-        context = {}
+        context = {
+            'p_form': profile_form
+        }
     else:
         context = {
             'last_seen_without_mask': user_stats.last_seen_date,

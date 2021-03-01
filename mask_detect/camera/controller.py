@@ -9,6 +9,7 @@ from accounts.models import Employee
 from stats.models import Statistic
 from django.shortcuts import redirect
 import face_recognition
+import time
 
 WAIT_MINUTES = 0.5
 VIOLATION_NUMBER = 3
@@ -28,6 +29,7 @@ class CameraThread(Thread):
 
 
 def run_camera(camera):
+    time.sleep(5)
     last_seen_without_mask = 0
     times_caught_without_mask = 0
 
@@ -49,6 +51,9 @@ def run_camera(camera):
             if label == "No Mask":
                 user = recognize_user(frame)
 
+                if user:
+                    # Do stuff
+                    pass
 
             label = f'{label}: {(max(mask, without_mask) * 100):.2f}%'
 
@@ -75,7 +80,7 @@ def recognize_user(frame):
     encode_frame = face_recognition.face_encodings(frame)[0] if len(face_recognition.face_encodings(frame)) != 0 else []
 
     if len(encode_frame) == 0:
-        return 0
+        return
 
     for p_pic_path in profile_pictures:
         profile_pic = face_recognition.load_image_file(str(p_pic_path))
@@ -87,10 +92,9 @@ def recognize_user(frame):
             employee = Employee.objects.filter(profile_pic=path)
 
             if len(employee) == 0:
-                return -1
+                return
             else:
-                return employee
-
+                return employee.first()
 
 def send_alert_mail(user, last_seen, repeat=None):
 

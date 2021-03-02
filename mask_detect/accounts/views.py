@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
 from .forms import SignUpEmployeeForm, UpdateEmployeeProfilePicture
 from .models import Employee
@@ -54,7 +55,7 @@ def profile(request):
     return render(request, 'accounts/profile.html', context)
 
 
-@login_required
+@staff_member_required
 def employee_profile(request):
     employee_id = request.GET['employee_id']
     employee = Employee.objects.filter(id=employee_id).first()
@@ -68,3 +69,4 @@ def employee_profile(request):
     }
     
     return render(request, 'accounts/employee-profile.html', context)
+

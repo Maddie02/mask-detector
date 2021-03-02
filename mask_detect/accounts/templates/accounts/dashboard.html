@@ -1,5 +1,6 @@
 {% extends "accounts/base.html" %}
 {% load static %}
+{% load query_parameters %}
 {% load tz %}
 
 <title>{% block title %}Dashboard{% endblock %}</title>
@@ -29,12 +30,14 @@
                         {% for stat in stats %}
                             {% if stat.employee_id == employee.id %}
                             {% timezone 'Europe/Sofia' %}
-                                <p><strong>Violations:</strong> {{ stat.count_violations }}</p>
-                                <p><strong>Last seen without mask:</strong> <br />{{ stat.last_seen_date }}</p>
+                                <p><strong>Violations:</strong> {{ stat.all_violations }}</p>
+                                <p><strong>Last seen without mask:</strong> <br />{{ stat.last_seen_without_mask }}</p>
                             {% endtimezone %}
+                            <a href="/stats?{% set_query_parameters employee_id=stat.employee.id %}" class="btn btn-secondary btn-stat">Export CSV</a>
                             {% endif %}
                         {% endfor %}
                         </p>
+                        {% if stat %}{% endif %}
                     </div>
                 </div>
             {% endfor %}

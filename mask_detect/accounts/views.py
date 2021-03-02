@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .forms import SignUpEmployeeForm, UpdateEmployeeProfilePicture
 from .models import Employee
-from stats.models import Statistic
+from stats.models import Statistic, Violation
 import datetime
 import csv
 
@@ -54,3 +54,17 @@ def profile(request):
     return render(request, 'accounts/profile.html', context)
 
 
+@login_required
+def employee_profile(request):
+    employee_id = request.GET['employee_id']
+    employee = Employee.objects.filter(id=employee_id).first()
+
+    violations = Violation.objects.filter(statistic__employee=employee)
+
+    context = {
+        'employee': employee,
+        'violations': violations,
+        'stat': Statistic.objects.filter(employee=employee).first()
+    }
+    
+    return render(request, 'accounts/employee-profile.html', context)

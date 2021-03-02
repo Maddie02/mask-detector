@@ -29,6 +29,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name="login"),
     path('logout/', auth_views.LogoutView.as_view(template_name='accounts/logout.html'), name="logout"),
     path('profile/', accounts_views.profile, name="profile"),
+    path('profile/employee', accounts_views.employee_profile, name="employee-profile"),
     path('stats', stat_views.export_csv_stats, name='export-csv'),
     path('dashboard/', stat_views.dashboard, name="dashboard"),
     path('admin-stats/', stat_views.dashboard_export_csvs, name='export-all-stats'),

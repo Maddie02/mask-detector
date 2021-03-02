@@ -36,7 +36,9 @@
                 <div class="collapse" id="collapseExample">
                     <hr>
                     {% for v in violations %}
-                        <p style="font-size: 20px;">{{ v.violation_date }}</p>
+                        {% timezone 'Europe/Sofia' %}
+                            <p style="font-size: 20px;">{{ v.violation_date }}</p>
+                        {% endtimezone %}
                     {% endfor %}
                 </div>
 

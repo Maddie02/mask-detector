@@ -18,26 +18,21 @@
         <div class="dashboard">
             {% for employee in employees %}
                 <div class="card employee-card" >
-                    {% comment %} {% if employee.profile_pic %}
-                        <img src="{{ employee.profile_pic.url }}" class="card-img-top" alt="profile-pic">
-                    {% else %}
-                        <img src="{% static 'accounts/account.jpg' %}" class="card-img-top" alt="profile-pic">
-                    {% endif %} {% endcomment %}
                     <div class="card-body">
                         <h5 class="card-title">{{ employee.first_name }}&nbsp{{ employee.last_name }}</h5>
                         <p class="card-text">{{ employee.company }}</p>
                         <p>
                         {% for stat in stats %}
                             {% if stat.employee_id == employee.id %}
-                            {% timezone 'Europe/Sofia' %}
-                                <p><strong>Violations:</strong> {{ stat.all_violations }}</p>
-                                <p><strong>Last seen without mask:</strong> <br />{{ stat.last_seen_without_mask }}</p>
-                            {% endtimezone %}
-                            <a href="/stats?{% set_query_parameters employee_id=stat.employee.id %}" class="btn btn-secondary btn-stat">Export CSV</a>
+                                {% timezone 'Europe/Sofia' %}
+                                    <p><strong>Violations:</strong> {{ stat.all_violations }}</p>
+                                    <p><strong>Last seen without mask:</strong> <br />{{ stat.last_seen_without_mask }}</p>
+                                {% endtimezone %}
+                                <a href="/stats?{% set_query_parameters employee_id=stat.employee.id %}" class="btn btn-secondary btn-stat">Export CSV</a>
                             {% endif %}
                         {% endfor %}
+                        <a href="/profile/employee?{% set_query_parameters employee_id=employee.id %}" class="btn btn-primary">Profile</a>
                         </p>
-                        {% if stat %}{% endif %}
                     </div>
                 </div>
             {% endfor %}

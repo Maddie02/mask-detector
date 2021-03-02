@@ -17,7 +17,8 @@
         </div>
         <div class="dashboard">
             {% for employee in employees %}
-                <div class="card employee-card" >
+                <div class="card employee-card bg-light"> 
+                {% comment %} row no-gutters bg-light position-relative {% endcomment %}
                     <div class="card-body">
                         <h5 class="card-title">{{ employee.first_name }}&nbsp{{ employee.last_name }}</h5>
                         <p class="card-text">{{ employee.company }}</p>
@@ -28,7 +29,7 @@
                                     <p><strong>Violations:</strong> {{ stat.all_violations }}</p>
                                     <p><strong>Last seen without mask:</strong> <br />{{ stat.last_seen_without_mask }}</p>
                                 {% endtimezone %}
-                                <a href="/stats?{% set_query_parameters employee_id=stat.employee.id %}" class="btn btn-secondary btn-stat">Export CSV</a>
+                                <a href="/stats?{% set_query_parameters employee_id=stat.employee.id %}" class="btn btn-secondary">Export CSV</a>
                             {% endif %}
                         {% endfor %}
                         <a href="/profile/employee?{% set_query_parameters employee_id=employee.id %}" class="btn btn-primary">Profile</a>

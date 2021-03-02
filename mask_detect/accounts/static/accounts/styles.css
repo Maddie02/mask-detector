@@ -224,7 +224,12 @@ a.btn.disabled, fieldset:disabled a.btn {
 .employee-card {
     border-radius: 20px;
     width: 28%;
-    margin-bottom: 10px;
+    margin-bottom: 25px;
+    transition: top ease-in;
+}
+
+.employee-card:hover {
+    top: -10px;
 }
 
 footer {

@@ -154,8 +154,11 @@ def create_stats(user, last_seen):
         stat = Statistic.objects.filter(employee=user).first()
         if stat == None:
             stat = Statistic(employee=user)
-            stat.save()
         
+        stat.all_violations += 1
+        stat.last_seen_without_mask = last_seen
+        stat.save()
+
         Violation.objects.create(violation_date=last_seen, statistic=stat)
 
     except Exception as e:

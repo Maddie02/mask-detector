@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import Statistic
+from .models import Statistic, Violation
 from accounts.models import Employee, Company
 from django.http import HttpResponse
 from .utils.check_stats import delete_stats_if_a_month_have_passed
@@ -17,7 +17,7 @@ def get_employee_stats(stats, company):
     stats_dict = {}
 
     for stat in stats:
-        stats_dict[stat.employee.first_name + ' ' + stat.employee.last_name] = stat.count_violations
+        stats_dict[stat.employee.first_name + ' ' + stat.employee.last_name] = stat.all_violations
     
     employees = list(stats_dict.keys())
     violations = list(stats_dict.values())
@@ -57,23 +57,28 @@ def get_employee_stats(stats, company):
 
 @login_required
 def export_csv_stats(request):
-
+    
+    employee_id = request.GET['employee_id']
     utc = datetime.timedelta(hours=2)
 
+    employee = Employee.objects.filter(id=employee_id).first()
+
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=Stats' + str(datetime.datetime.now() + utc) + '.csv'
+    response['Content-Disposition'] = 'attachment; filename=Stats-' + employee.first_name + ' ' + employee.last_name + '.csv'
 
     writer = csv.writer(response)
-    writer.writerow(['First name', 'Last name', 'Violations', 'Last date without mask'])
+    writer.writerow(['Violation dates'])
 
-    stat = Statistic.objects.filter(employee=request.user).first()
+    stat = Statistic.objects.filter(employee__id=employee_id).first()
+    violations = Violation.objects.filter(statistic=stat)
 
     if stat == None:
         messages.info(request, 'Statistics for your account are not found')
         return redirect('profile')
 
-    writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.count_violations, stat.last_seen_date + utc])
-
+    for v in violations:
+        writer.writerow([v.violation_date + utc])
+    
     return response
 
 
@@ -117,7 +122,7 @@ def dashboard_export_csvs(request):
         return redirect('dashboard')
 
     for stat in stats:
-        writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.count_violations, stat.last_seen_date + utc])
+        writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.all_violations, stat.last_seen_without_mask + utc])
 
     return response
 

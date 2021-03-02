@@ -47,7 +47,7 @@ def profile(request):
         }
     else:
         context = {
-            'last_seen_without_mask': user_stats.last_seen_date,
+            'last_seen_without_mask': user_stats.last_seen_without_mask,
             'p_form': profile_form
         }
 

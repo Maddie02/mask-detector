@@ -218,6 +218,7 @@ a.btn.disabled, fieldset:disabled a.btn {
     width: 100%;
     justify-content: space-evenly;
     flex-wrap: wrap;
+    margin-bottom: 30px;
 }
 
 .employee-card {

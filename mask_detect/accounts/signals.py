@@ -16,14 +16,4 @@ def add_employee_to_company(sender, instance, **kwargs):
         instance.company = company.first()
 
 
-@receiver(user_logged_in)
-def post_login(sender, user, request, **kwargs):
-    stat = Statistic.objects.filter(employee=user).first()
-
-    if stat == None:
-        return
-
-    delete_stats_if_a_month_have_passed(stat)
-
-
 

@@ -6,7 +6,7 @@ from datetime import datetime, timezone, timedelta
 from django.contrib.auth.signals import user_logged_out
 from django.dispatch import receiver
 from accounts.models import Employee
-from stats.models import Statistic
+from stats.models import Statistic, Violation
 from django.shortcuts import redirect
 import face_recognition
 import time
@@ -106,7 +106,7 @@ def recognize_user(frame):
                 return employee.first()
 
 
-def send_alert_mail(user, last_seen, repeat=None):
+def send_alert_mail(user, last_seen, repeat):
 
     additional_message = ''
 
@@ -153,12 +153,14 @@ def create_stats(user, last_seen):
     try:
         stat = Statistic.objects.filter(employee=user).first()
         if stat == None:
-            stat = Statistic(employee=user, count_violations=1, last_seen_date=last_seen)
-        else:
-            stat.last_seen_date = last_seen
-            stat.count_violations = stat.count_violations + 1
+            stat = Statistic(employee=user)
+        
+        stat.all_violations += 1
+        stat.last_seen_without_mask = last_seen
         stat.save()
-    except:
-        print("Error while creating/updating statistics")
 
+        Violation.objects.create(violation_date=last_seen, statistic=stat)
+
+    except Exception as e:
+        print("Error while creating/updating statistics", e)
 

@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import Statistic
+from .models import Statistic, Violation
 from accounts.models import Employee, Company
 from django.http import HttpResponse
 from .utils.check_stats import delete_stats_if_a_month_have_passed
@@ -17,7 +17,7 @@ def get_employee_stats(stats, company):
     stats_dict = {}
 
     for stat in stats:
-        stats_dict[stat.employee.first_name + ' ' + stat.employee.last_name] = stat.count_violations
+        stats_dict[stat.employee.first_name + ' ' + stat.employee.last_name] = stat.all_violations
     
     employees = list(stats_dict.keys())
     violations = list(stats_dict.values())
@@ -55,25 +55,75 @@ def get_employee_stats(stats, company):
     return chart
 
 
+def get_detailed_chart_for_employee(violations):
+
+    detailed_violations = {}
+
+    for violation in violations:
+        key = violation.violation_date.strftime("%d. %B %Y")
+        if key in detailed_violations:
+            detailed_violations[key] += 1
+        else:
+            detailed_violations[key] = 1
+
+    violation_dates = list(detailed_violations.keys())
+    all_violations_per_date = list(detailed_violations.values())
+
+    if len(violation_dates) < 3:
+        return
+
+    data = [go.Scatter(
+            x=violation_dates, y=all_violations_per_date,
+            textposition='bottom center',
+            )]
+
+    layout = go.Layout(
+        title=f"Violation chart - {violations[0].statistic.employee}",
+        font=dict(
+            family='Poppins, monospace',
+            size=14,
+            color='#7f7f7f'))
+
+    figure = go.Figure(data=data, layout=layout)
+    figure.update_xaxes(
+        title='Date'
+    )
+
+    figure.update_yaxes(
+        title='Violations'
+    )
+
+    figure.update_layout(title_x=0.5)
+
+    chart = opy.plot(figure, output_type='div')
+
+    return chart
+
+
 @login_required
 def export_csv_stats(request):
-
+    
+    employee_id = request.GET['employee_id']
     utc = datetime.timedelta(hours=2)
 
+    employee = Employee.objects.filter(id=employee_id).first()
+
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=Stats' + str(datetime.datetime.now() + utc) + '.csv'
+    response['Content-Disposition'] = 'attachment; filename=Stats-' + employee.first_name + ' ' + employee.last_name + '.csv'
 
     writer = csv.writer(response)
-    writer.writerow(['First name', 'Last name', 'Violations', 'Last date without mask'])
+    writer.writerow(['Violation dates'])
 
-    stat = Statistic.objects.filter(employee=request.user).first()
+    stat = Statistic.objects.filter(employee__id=employee_id).first()
+    violations = Violation.objects.filter(statistic=stat)
 
     if stat == None:
         messages.info(request, 'Statistics for your account are not found')
         return redirect('profile')
 
-    writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.count_violations, stat.last_seen_date + utc])
-
+    for v in violations:
+        writer.writerow([v.violation_date + utc])
+    
     return response
 
 
@@ -117,7 +167,7 @@ def dashboard_export_csvs(request):
         return redirect('dashboard')
 
     for stat in stats:
-        writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.count_violations, stat.last_seen_date + utc])
+        writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.all_violations, stat.last_seen_without_mask + utc])
 
     return response
 

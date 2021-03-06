@@ -1,12 +1,13 @@
 {% extends "accounts/base.html" %}
 {% load static %}
+{% load query_parameters %}
 {% load tz %}
 
 <title>{% block title %}Dashboard{% endblock %}</title>
 
 {% block content %}
     <div class="container">
-        <h2 style="text-align: center;">{{ month }} statistics</h2>
+        <h2 style="text-align: center;">Statistics</h2>
         <div class="dash-buttons">
             <a href={% url 'charts' %} class="btn btn-primary btn-lg btn-view">View graphical statistics</a>
         </div>
@@ -16,26 +17,23 @@
         </div>
         <div class="dashboard">
             {% for employee in employees %}
-                <div class="card employee-card" >
-                    {% comment %} {% if employee.profile_pic %}
-                        <img src="{{ employee.profile_pic.url }}" class="card-img-top" alt="profile-pic">
-                    {% else %}
-                        <img src="{% static 'accounts/account.jpg' %}" class="card-img-top" alt="profile-pic">
-                    {% endif %} {% endcomment %}
+                <div class="card employee-card bg-light"> 
                     <div class="card-body">
                         <h5 class="card-title">{{ employee.first_name }}&nbsp{{ employee.last_name }}</h5>
                         <p class="card-text">{{ employee.company }}</p>
                         <p>
                         {% for stat in stats %}
                             {% if stat.employee_id == employee.id %}
-                            {% timezone 'Europe/Sofia' %}
-                                <p><strong>Violations:</strong> {{ stat.count_violations }}</p>
-                                <p><strong>Last seen without mask:</strong> <br />{{ stat.last_seen_date }}</p>
-                            {% endtimezone %}
+                                {% timezone 'Europe/Sofia' %}
+                                    <p><strong>Violations:</strong> {{ stat.all_violations }}</p>
+                                    <p><strong>Last seen without mask:</strong> <br />{{ stat.last_seen_without_mask }}</p>
+                                {% endtimezone %}
+                                <a href="/stats?{% set_query_parameters employee_id=stat.employee.id %}" class="btn btn-secondary">Export CSV</a>
                             {% endif %}
                         {% endfor %}
+                        <a href="/profile/employee?{% set_query_parameters employee_id=employee.id %}" class="btn btn-primary">Profile</a>
                         </p>
-                    </div>
+                </div>
                 </div>
             {% endfor %}
         </div>

@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
 from .forms import SignUpEmployeeForm, UpdateEmployeeProfilePicture
 from .models import Employee
-from stats.models import Statistic
+from stats.models import Statistic, Violation
+from stats.views import get_detailed_chart_for_employee
 import datetime
 import csv
 
@@ -47,10 +49,26 @@ def profile(request):
         }
     else:
         context = {
-            'last_seen_without_mask': user_stats.last_seen_date,
+            'last_seen_without_mask': user_stats.last_seen_without_mask,
             'p_form': profile_form
         }
 
     return render(request, 'accounts/profile.html', context)
 
+
+@staff_member_required
+def employee_profile(request):
+    employee_id = request.GET['employee_id']
+    employee = Employee.objects.filter(id=employee_id).first()
+
+    violations = Violation.objects.filter(statistic__employee=employee)
+
+    context = {
+        'employee': employee,
+        'violations': violations,
+        'stat': Statistic.objects.filter(employee=employee).first(),
+        'chart': get_detailed_chart_for_employee(violations)
+    }
+    
+    return render(request, 'accounts/employee-profile.html', context)
 

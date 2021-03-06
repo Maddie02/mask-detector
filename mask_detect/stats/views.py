@@ -55,6 +55,51 @@ def get_employee_stats(stats, company):
     return chart
 
 
+def get_detailed_chart_for_employee(violations):
+
+    detailed_violations = {}
+
+    for violation in violations:
+        key = violation.violation_date.strftime("%d. %B %Y")
+        if key in detailed_violations:
+            detailed_violations[key] += 1
+        else:
+            detailed_violations[key] = 1
+
+    violation_dates = list(detailed_violations.keys())
+    all_violations_per_date = list(detailed_violations.values())
+
+    if len(violation_dates) < 3:
+        return
+
+    data = [go.Scatter(
+            x=violation_dates, y=all_violations_per_date,
+            textposition='bottom center',
+            )]
+
+    layout = go.Layout(
+        title=f"Violation chart - {violations[0].statistic.employee}",
+        font=dict(
+            family='Poppins, monospace',
+            size=14,
+            color='#7f7f7f'))
+
+    figure = go.Figure(data=data, layout=layout)
+    figure.update_xaxes(
+        title='Date'
+    )
+
+    figure.update_yaxes(
+        title='Violations'
+    )
+
+    figure.update_layout(title_x=0.5)
+
+    chart = opy.plot(figure, output_type='div')
+
+    return chart
+
+
 @login_required
 def export_csv_stats(request):
     

@@ -33,6 +33,16 @@
                         <span class="badge badge-light">{{ stat.all_violations }}</span>                    
                     {% endif %}
                 </a>
+                {% if chart %}                
+                    <a class="btn btn-info btn-lg" data-toggle="collapse" href="#collapseChart" role="button">
+                        Violation chart
+                    </a>
+                    <div class="employee-chart">
+                        <div class="collapse" id="collapseChart" style="text-align: center;">
+                            {{ chart | safe }}
+                        </div>
+                    </div>
+                {% endif %}
                 <div class="collapse" id="collapseExample">
                     <hr>
                     {% for v in violations %}

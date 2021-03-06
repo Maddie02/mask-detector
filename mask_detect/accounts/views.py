@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from .forms import SignUpEmployeeForm, UpdateEmployeeProfilePicture
 from .models import Employee
 from stats.models import Statistic, Violation
+from stats.views import get_detailed_chart_for_employee
 import datetime
 import csv
 
@@ -65,7 +66,8 @@ def employee_profile(request):
     context = {
         'employee': employee,
         'violations': violations,
-        'stat': Statistic.objects.filter(employee=employee).first()
+        'stat': Statistic.objects.filter(employee=employee).first(),
+        'chart': get_detailed_chart_for_employee(violations)
     }
     
     return render(request, 'accounts/employee-profile.html', context)

@@ -24,6 +24,18 @@
                     <p><strong>Last seen without mask: </strong>{{ last_seen_without_mask }}</p>
                 {% endtimezone %}
             {% endif %}
+            {% if p_form %}
+                <hr>    
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <fieldset class="form-group profile-pic-field">
+                        {{ p_form|crispy }}
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-outline-info" type="submit">Update</button>
+                    </div>
+                </form>
+            {% endif %}
         </div>
     </div>
 </div>

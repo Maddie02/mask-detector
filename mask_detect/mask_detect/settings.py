@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'query_parameters',
     'django_extensions',
     'accounts.apps.AccountsConfig',
     'camera.apps.CameraConfig',

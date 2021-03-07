@@ -100,7 +100,7 @@ def get_detailed_chart_for_employee(violations):
     return chart
 
 
-@login_required
+@staff_member_required
 def export_csv_stats(request):
     
     employee_id = request.GET['employee_id']
@@ -118,7 +118,7 @@ def export_csv_stats(request):
     violations = Violation.objects.filter(statistic=stat)
 
     if stat == None:
-        messages.info(request, 'Statistics for your account are not found')
+        messages.info(request, 'Statistics for this account are not found')
         return redirect('profile')
 
     for v in violations:
@@ -130,7 +130,6 @@ def export_csv_stats(request):
 @staff_member_required
 def dashboard(request):
     employees = Employee.objects.all() if request.user.is_superuser else Employee.objects.filter(company=request.user.company)
-    stats = Statistic.objects.all()
  
     company_stats = Statistic.objects.filter(employee__company__name=request.user.company)
     updated_stats = Statistic.objects.all() if request.user.is_superuser else company_stats
@@ -141,7 +140,6 @@ def dashboard(request):
         'employees': employees,
         'stats': updated_stats,
         'disable': disable,
-        'month': datetime.datetime.now().strftime("%B")
     }
 
     return render(request, 'accounts/dashboard.html', context)
@@ -163,7 +161,7 @@ def dashboard_export_csvs(request):
         stats = Statistic.objects.filter(employee__company__name=request.user.company)
 
     if not stats:
-        messages.info(request, 'There are no statistics available for this month')
+        messages.info(request, 'There are no statistics available')
         return redirect('dashboard')
 
     for stat in stats:
@@ -202,7 +200,5 @@ def view_charts(request):
             'chart': get_employee_stats(stats_for_company, company=request.user.company)
         }
     
-    context['month'] = datetime.datetime.now().strftime("%B")
-
     return render(request, 'accounts/charts.html', context)
 

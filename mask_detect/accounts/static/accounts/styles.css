@@ -248,6 +248,10 @@ footer {
     padding-left: 50%;
 } */
 
+.profile_pic {
+    padding: 40px;
+}
+
 input[type='file'] {
     padding-left: 40%;
 }

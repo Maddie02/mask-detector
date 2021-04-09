@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from .utils.check_stats import delete_stats_if_a_month_have_passed
 import plotly.graph_objects as go
 import plotly.offline as opy
-import datetime
+import datetime, pytz
 import csv
 
 
@@ -104,7 +104,7 @@ def get_detailed_chart_for_employee(violations):
 def export_csv_stats(request):
     
     employee_id = request.GET['employee_id']
-    utc = datetime.timedelta(hours=2)
+    tz = pytz.timezone('Europe/Sofia')
 
     employee = Employee.objects.filter(id=employee_id).first()
 
@@ -122,7 +122,7 @@ def export_csv_stats(request):
         return redirect('profile')
 
     for v in violations:
-        writer.writerow([v.violation_date + utc])
+        writer.writerow([v.violation_date + tz])
     
     return response
 
@@ -147,10 +147,10 @@ def dashboard(request):
 
 @staff_member_required
 def dashboard_export_csvs(request):
-    utc = datetime.timedelta(hours=2)
+    tz = pytz.timezone('Europe/Sofia')
 
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=Stats' + str(datetime.datetime.now() + utc) + '.csv'
+    response['Content-Disposition'] = 'attachment; filename=Stats' + str(datetime.datetime.now() + tz) + '.csv'
 
     writer = csv.writer(response)
     writer.writerow(['First name', 'Last name', 'Violations', 'Last date without mask'])
@@ -165,7 +165,7 @@ def dashboard_export_csvs(request):
         return redirect('dashboard')
 
     for stat in stats:
-        writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.all_violations, stat.last_seen_without_mask + utc])
+        writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.all_violations, stat.last_seen_without_mask + tz])
 
     return response
 

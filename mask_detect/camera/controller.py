@@ -9,14 +9,14 @@ from accounts.models import Employee
 from stats.models import Statistic, Violation
 from django.shortcuts import redirect
 import face_recognition
-import time
+import time, pytz
 
 WAIT_MINUTES = 0.5
 VIOLATION_NUMBER = 3
 
 MEDIA_FOLDER = '../mask_detect/media/profilepics/'
 
-utc = timezone(offset=timedelta(hours=2))
+tz = pytz.timezone('Europe/Sofia')
 
 class CameraThread(Thread):
 
@@ -59,7 +59,7 @@ def run_camera(camera):
                     if (time.time() - last_seen_without_mask) / 60 >= WAIT_MINUTES:    
                         last_seen_without_mask = time.time()
                         times_caught_without_mask += 1
-                        send_alert_mail(user, datetime.now(utc), times_caught_without_mask)
+                        send_alert_mail(user, datetime.now(tz), times_caught_without_mask)
 
             else:
                 last_seen_without_mask = 0

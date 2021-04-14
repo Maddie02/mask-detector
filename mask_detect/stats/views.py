@@ -122,7 +122,7 @@ def export_csv_stats(request):
         return redirect('profile')
 
     for v in violations:
-        writer.writerow([v.violation_date + tz])
+        writer.writerow([v.violation_date.astimezone(tz)])
     
     return response
 
@@ -150,7 +150,7 @@ def dashboard_export_csvs(request):
     tz = pytz.timezone('Europe/Sofia')
 
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=Stats' + str(datetime.datetime.now() + tz) + '.csv'
+    response['Content-Disposition'] = 'attachment; filename=Stats' + str(datetime.datetime.now(tz)) + '.csv'
 
     writer = csv.writer(response)
     writer.writerow(['First name', 'Last name', 'Violations', 'Last date without mask'])
@@ -165,7 +165,7 @@ def dashboard_export_csvs(request):
         return redirect('dashboard')
 
     for stat in stats:
-        writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.all_violations, stat.last_seen_without_mask + tz])
+        writer.writerow([stat.employee.first_name, stat.employee.last_name, stat.all_violations, stat.last_seen_without_mask.astimezone(tz=tz)])
 
     return response
 

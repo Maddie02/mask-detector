@@ -11,7 +11,7 @@ from django.shortcuts import redirect
 import face_recognition
 import time, pytz
 
-WAIT_MINUTES = 0.5
+WAIT_MINUTES = 0.30
 VIOLATION_NUMBER = 3
 
 MEDIA_FOLDER = '../mask_detect/media/profilepics/'
@@ -57,7 +57,7 @@ def run_camera(camera):
                         last_seen_without_mask = time.time()
                     
                     if (time.time() - last_seen_without_mask) / 60 >= WAIT_MINUTES:
-                        print('50 seconds passed - alert email')
+                        print('30 seconds passed - alert email')
                         last_seen_without_mask = time.time()
                         times_caught_without_mask += 1
                         send_alert_mail(user, datetime.now(tz), times_caught_without_mask)
